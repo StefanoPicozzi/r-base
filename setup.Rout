@@ -1,0 +1,42 @@
+
+R version 3.2.3 RC (2015-12-03 r69731) -- "Wooden Christmas-Tree"
+Copyright (C) 2015 The R Foundation for Statistical Computing
+Platform: x86_64-pc-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+[1] "--> Library Paths"
+[1] "/home/docker/packages"         "/usr/local/lib/R/site-library"
+[3] "/usr/lib/R/site-library"       "/usr/lib/R/library"           
+> #!/usr/bin/env Rscript
+> print("--> Installing packages")
+[1] "--> Installing packages"
+> 
+> packages <- c(
++ "stringi",
++ "magrittr",
++ "colorspace"
++ )
+> 
+> for (package in packages) {
++    if (package %in% rownames(installed.packages()) == FALSE) {
++       install.packages(package)
++    }
++ }
+> 
+> quit("no")
+> proc.time()
+   user  system elapsed 
+  0.370   0.310   0.669 
