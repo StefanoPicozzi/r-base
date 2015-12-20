@@ -5,13 +5,13 @@ packages <- c(
    "rJava",
    "Rcpp",
    "RColorBrewer",
-   "dichtomat",
+   "dichromat",
    "munsell",
    "labeling",
    "plyr",
    "digest",
    "gtable",
-   "reshap2",
+   "reshape2",
    "scales",
    "proto",
    "ggplot2",
@@ -31,11 +31,13 @@ packages <- c(
    "base64enc",
    "stringi",
    "magrittr",
-   "colorspace"
+   "colorspace",
+   "xts"
 )
 
 for (package in packages) {
    if (package %in% rownames(installed.packages()) == FALSE) {
+      print(package)
       install.packages(package)
    }
 }
