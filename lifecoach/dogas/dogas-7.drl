@@ -1,0 +1,179 @@
+import java.util.HashMap;
+import org.json.JSONObject;
+import java.util.Date; 
+import java.text.SimpleDateFormat; 
+import com.satimetry.nudge.Output;
+
+global java.util.HashMap output;
+global SimpleDateFormat inSDF;
+global SimpleDateFormat outSDF;
+// Note that you cannot use variables inside sliding window clause
+global String window;
+
+function void print(String txt) {
+   System.out.println(txt);
+}
+
+// Declare inside drl so we can manipulate objects naturally
+declare Participant
+  @role( fact )
+  id : String @key
+  gastype : String
+  dayofweek : String
+end
+
+// Declare inside drl so we can manipulate objects naturally
+declare Observation
+  @role( event )
+  @timestamp ( obsdate )
+  id : String @key
+  obsdate : Date @key
+  obsvalue : Integer
+end
+
+rule "setGlobalVariables"
+  salience 10000
+  when
+    eval(true)
+  then
+    window = "90d";
+    print("window-->" + window);
+end
+
+rule "ruleInsertObservation"
+  salience 2000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+  then
+    inSDF = new SimpleDateFormat("yyyy-M-d H:m:s Z");
+    Date date = inSDF.parse( $input.get("obsdate").toString() + " +1100" );
+    Observation observation = new Observation($input.get("username").toString(), date);
+    Observation obs = new Observation($input.get("username").toString(), date);
+    obs.setObsvalue( Integer.parseInt($input.get("obsvalue").toString()) );
+    insert(obs);
+    print(drools.getRule().getName() + "->" + obs.getId() + "-" + obs.getObsdate() + "-" + obs.getObsvalue() );
+end
+
+rule "ruleInsertParticipant"
+  salience 1000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+    not Participant( id == $input.get("username").toString() )
+  then
+    Date today = new Date();
+    String dayofweek = new SimpleDateFormat("EE").format(today);
+    if (dayofweek.equals("Sat")) { dayofweek = "Sun"; }
+    else if (dayofweek.equals("Fri")) { dayofweek = "Sat"; }
+    else if (dayofweek.equals("Thu")) { dayofweek = "Fri"; }
+    else if (dayofweek.equals("Wed")) { dayofweek = "Thu"; }
+    else if (dayofweek.equals("Tue")) { dayofweek = "Wed"; }
+    else if (dayofweek.equals("Mon")) { dayofweek = "Tue"; }
+    else if (dayofweek.equals("Sun")) { dayofweek = "Mon"; }
+
+    Participant $participant = new Participant( $input.get("username").toString() );
+    $participant.setGastype( $input.get("obsname").toString() );
+    $participant.setDayofweek(dayofweek);
+    insert( $participant );
+    print(today.toString());
+    print(drools.getRule().getName() + "->" + $participant.getId() + "-" + $participant.getDayofweek() + "-" + $participant.getGastype() );
+end
+
+rule "ruleBestExpectedCount"
+  salience -100
+  no-loop true
+  when
+    $participant : Participant( dayofweek == "Sat" )
+    $obsCountTotal : Number( intValue > 0) from accumulate(
+      Observation( $obsCount : obsvalue == 2, $participant.id == id ) over window:time( 30d ),
+      count( $obsCount ) )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+    joutput.put("rulemsg", "Nudge says that for " + $participant.getGastype() + " you met your best goal " + $obsCountTotal + " times in the past 30 days");
+  	joutput.put("ruledata", "http://www.thenudgemachine.com/msg.php");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+   	print(drools.getRule().getName() + "->" + $participant.getId() + " - " + $participant.getDayofweek() );
+end
+
+rule "ruleExpectedCount"
+  salience -100
+  no-loop true
+  when
+    $participant : Participant( dayofweek == "Fri" )
+    $obsCountTotal : Number( intValue > 0) from accumulate(
+      Observation( $obsCount : obsvalue >= 0, $participant.id == id ) over window:time( 30d ),
+      count( $obsCount ) )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+    joutput.put("rulemsg", "Nudge says for " + $participant.getGastype() + " you met or exceed your goal " + $obsCountTotal + " times in past 30 days");
+  	joutput.put("ruledata", "http://www.thenudgemachine.com/msg.php");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+   	print(drools.getRule().getName() + "->" + $participant.getId() + " - " + $participant.getDayofweek() );
+end
+
+
+rule "ruleWeeklySurveyReminder"
+  salience -300
+  when
+    $participant : Participant( dayofweek == "Sun" )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+    joutput.put("rulemsg", 
+      "Reminder to record " + $participant.getGastype() + " goal attainment at http://www.thenudgemachine.com/gasq.php?ruleid=61");
+    joutput.put("ruledata", "http://www.thenudgemachine.com/gasq.php?ruleid=61");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+    print(drools.getRule().getName() + "->" + $participant.getId());
+end
+
+rule "ruleFastDayReminder"
+  salience -300
+  when
+    $participant : Participant( dayofweek == "Mon" || dayofweek == "Thu" )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+    joutput.put("rulemsg", 
+      "Reminder that today is a fast day for the 5:2 diet");
+    joutput.put("ruledata", "http://www.thenudgemachine.com/gasq.php?ruleid=61");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+    print(drools.getRule().getName() + "->" + $participant.getId());
+end
+

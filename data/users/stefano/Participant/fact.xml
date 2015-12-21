@@ -1,0 +1,7 @@
+<com.redhat.weightwatcher.Fact>
+	<factid>1</factid>
+	<facttype>1</facttype>
+	<factname>Participant</factname>
+	<factjson>{ "userid" : 7, "username" : "stefano" }</factjson>
+	<facttxt>Incoming Participant JSON</facttxt>
+</com.redhat.weightwatcher.Fact>

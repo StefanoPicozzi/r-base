@@ -1,0 +1,170 @@
+import java.util.HashMap;
+import org.json.JSONObject;
+import java.util.Date; 
+import java.text.SimpleDateFormat; 
+import com.satimetry.nudge.Output;
+
+global java.util.HashMap output;
+global SimpleDateFormat inSDF;
+global SimpleDateFormat outSDF;
+
+function void print(String txt) {
+   System.out.println(txt);
+}
+
+// Declare inside drl so we can manipulate objects naturally
+declare Participant
+  @role( fact )
+  id : String @key
+  dayofweek : String
+end
+
+// Declare inside drl so we can manipulate objects naturally
+declare Observation
+  @role( event )
+  @timestamp ( obsdate )
+  id : String @key
+  obsdate : Date @key
+  obsvalue : Double
+end
+
+rule "rulePrintJSON"
+   salience 2000
+   when
+      $input : JSONObject() from entry-point DEFAULT
+   then
+      System.out.println($input.toString());
+      System.out.println($input.get("obsdate"));
+end
+
+rule "ruleInsertObservation"
+  salience 2000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+  then
+    inSDF = new SimpleDateFormat("yyyy-M-d H:m:s Z");
+    Date date = inSDF.parse( $input.get("obsdate").toString() + " +1100" );
+    Observation observation = new Observation($input.get("username").toString(), date);
+    observation.setObsvalue( Double.parseDouble($input.get("obsvalue").toString()) );
+    insert(observation);
+    print(drools.getRule().getName() + "->" + observation.getId() + "-" + 
+      observation.getObsdate() + "-" + 
+      observation.getObsvalue() );
+end
+
+rule "ruleInsertParticipant"
+  salience 1000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+    not Participant( id == $input.get("username").toString() )
+  then
+    Date today = new Date();
+    String dayofweek = new SimpleDateFormat("EE").format(today);
+    Participant $participant = new Participant( $input.get("username").toString() );
+    $participant.setDayofweek(dayofweek);
+    insert( $participant );
+    print(drools.getRule().getName() + "->" + $participant.getId() );
+end
+
+rule "ruleAverageWeight"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $obsvalueAverage : Number( doubleValue > 0) from accumulate(
+         Observation( $obsvalue : obsvalue > 0, $participant.id == id ) over window:time( 7d ),
+         average( $obsvalue ) )
+   then
+      Date today = new Date(); 
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that your WEIGHT averaged " + String.format("%.2f", $obsvalueAverage) + " over the past 7 days");
+      joutput.put("ruledata", $obsvalueAverage);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "->" + $obsvalueAverage);
+end
+
+rule "ruleHighWeight"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $obsvalueHigh : Number( doubleValue > 0) from accumulate(
+         Observation( $obsvalue : obsvalue, $participant.id == id ) over window:time( 30d ),
+         max( $obsvalue ) )
+   then
+      Date today = new Date(); 
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that your WEIGHT maximum was " + String.format("%.2f", $obsvalueHigh) + " over the past 30 days");
+      joutput.put("ruledata", $obsvalueHigh);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "->" + $obsvalueHigh);
+end
+
+rule "ruleLowWeight"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $obsvalueLow : Number( doubleValue > 0) from accumulate(
+         Observation( $obsvalue : obsvalue, $participant.id == id ) over window:time( 30d ),
+         min( $obsvalue ) )
+   then
+      Date today = new Date(); 
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that your WEIGHT minimum was " + String.format("%.2f", $obsvalueLow) + " over the past 30 days");
+      joutput.put("ruledata", $obsvalueLow);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "->" + $obsvalueLow);
+end
+
+rule "rulePercentWeight"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $obsvalueLow : Number( doubleValue > 0) from accumulate(
+         Observation( $obsvalue : obsvalue, $participant.id == id ) over window:time( 7d ),
+         min( $obsvalue ) )
+   then
+      Date today = new Date(); 
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+      Double $startweight = 83.5;
+      Double $percentdrop = 100.0*($startweight - $obsvalueLow.doubleValue())/$startweight;
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that your WEIGHT change since start of the 5:2 diet is " + String.format("%.2f", $percentdrop) + "%");
+      joutput.put("ruledata", $obsvalueLow);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "->" + $obsvalueLow);
+end
+

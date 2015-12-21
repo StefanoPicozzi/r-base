@@ -1,0 +1,123 @@
+import java.util.HashMap;
+import org.json.JSONObject;
+import java.util.Date; 
+import java.text.SimpleDateFormat; 
+import com.satimetry.nudge.Output;
+
+global java.util.HashMap output;
+global SimpleDateFormat inSDF;
+global SimpleDateFormat outSDF;
+
+function void print(String txt) {
+   System.out.println(txt);
+}
+
+// Declare inside drl so we can manipulate objects naturally
+declare Participant
+  @role( fact )
+  id : String @key
+  dayofweek : String
+end
+
+// Declare inside drl so we can manipulate objects naturally
+declare Activity
+  @role( event )
+  @timestamp ( stepDate )
+  id : String @key
+  stepDate : Date @key
+  stepCount : Integer
+end
+
+declare UserRule
+  @role( fact )
+  id : String @key
+  ruleName : String @key
+end
+
+rule "rulePrintJSON"
+   salience 2000
+   when
+      $input : JSONObject() from entry-point DEFAULT
+   then
+      System.out.println($input.toString());
+      System.out.println($input.get("obsdate"));
+end
+
+rule "ruleInsertActivity"
+  salience 2000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+  then
+    inSDF = new SimpleDateFormat("yyyy-M-d");
+    Date date = inSDF.parse( $input.get("obsdate").toString() );
+    Activity activity = new Activity($input.get("username").toString(), date);
+    activity.setStepCount( Integer.parseInt($input.get("obsvalue").toString()) );
+    insert(activity);
+    print(drools.getRule().getName() + "->" + activity.getId() + "-" + activity.getStepDate() + "-" + activity.getStepCount() );
+end
+
+rule "ruleInsertParticipant"
+  salience 1000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+    not Participant( id == $input.get("username").toString() )
+  then
+    Date today = new Date();
+    String dayofweek = new SimpleDateFormat("EE").format(today);
+    Participant $participant = new Participant( $input.get("username").toString() );
+    $participant.setDayofweek(dayofweek);
+    insert( $participant );
+    print(drools.getRule().getName() + "->" + $participant.getId() );
+end
+
+rule "ruleHighStepCount"
+  salience -1000
+  no-loop true
+  when
+     $participant : Participant()
+     $stepCountTotal : Number( intValue > 0) from accumulate(
+      Activity( $stepCount : stepCount >= 10000, $participant.id == id ) over window:time( 30d ),
+          count( $stepCount ) )
+  then
+      Date today = new Date(); 
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that you exceeded 10,000 steps " + $stepCountTotal + " times in the past 30 days");
+      joutput.put("ruledata", $stepCountTotal);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "->" + $stepCountTotal);
+end
+
+rule "ruleAverageStepCount"
+  salience -1000
+  no-loop true
+  when
+     $participant : Participant()
+     $stepCountAverage : Number( intValue > 0) from accumulate(
+      Activity( $stepCount : stepCount > 0, $participant.id == id ) over window:time( 7d ),
+          average( $stepCount ) )
+  then
+      Date today = new Date(); 
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef);      
+      joutput.put("rulemsg", "Nudge says that you averaged " + 
+         String.format("%.2f", $stepCountAverage) + 
+         " steps per day over the last 7 days");
+      joutput.put("ruledata", $stepCountAverage);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "--->" + $stepCountAverage + "-" + joutput.get("ruledate") );
+end

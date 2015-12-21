@@ -1,0 +1,152 @@
+import java.util.HashMap;
+import org.json.JSONObject;
+import java.util.Date; 
+import java.text.SimpleDateFormat; 
+import com.satimetry.nudge.Output;
+
+global java.util.HashMap output;
+global SimpleDateFormat inSDF;
+global SimpleDateFormat outSDF;
+// Note that you cannot use variables inside sliding window clause
+global String window;
+
+function void print(String txt) {
+   System.out.println(txt);
+}
+
+// Declare inside drl so we can manipulate objects naturally
+declare Participant
+  @role( fact )
+  id : String @key
+  gastype : String
+  dayofweek : String
+end
+
+// Declare inside drl so we can manipulate objects naturally
+declare Observation
+  @role( event )
+  @timestamp ( obsdate )
+  id : String @key
+  obsdate : Date @key
+  obsvalue : Integer
+end
+
+rule "setGlobalVariables"
+  salience 10000
+  when
+    eval(true)
+  then
+    window = "60d";
+    print("window-->" + window);
+end
+
+rule "ruleInsertObservation"
+  salience 2000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+  then
+    inSDF = new SimpleDateFormat("yyyy-M-d");
+    Date date = inSDF.parse( $input.get("obsdate").toString() );
+    Observation obs = new Observation($input.get("username").toString(), date);
+    obs.setObsvalue( Integer.parseInt($input.get("obsvalue").toString()) );
+    insert(obs);
+    print(drools.getRule().getName() + "->" + obs.getId() + "-" + obs.getObsdate() + "-" + obs.getObsvalue() );
+end
+
+rule "ruleInsertParticipant"
+  salience 1000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+    not Participant( id == $input.get("username").toString() )
+  then
+    Date today = new Date();
+    String dayofweek = new SimpleDateFormat("EE").format(today);
+    Participant $participant = new Participant( $input.get("username").toString() );
+    $participant.setGastype( $input.get("obsname").toString() );
+    $participant.setDayofweek(dayofweek);
+    insert( $participant );
+    print(drools.getRule().getName() + "->" + $participant.getId() + "-" + $participant.getGastype() );
+end
+
+rule "ruleBestExpectedCount"
+  salience -100
+  no-loop true
+  when
+    $participant : Participant( dayofweek != "Sun" )
+    $obsCountTotal : Number( intValue > 0) from accumulate(
+      Observation( $obsCount : obsvalue == 2, $participant.id == id ) over window:time( 60d ),
+      count( $obsCount ) )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+    joutput.put("rulemsg", "Nudge says that for goal " + $participant.getGastype() + " you attained your best expected outcome " + $obsCountTotal + " times in the past 60 days");
+		joutput.put("ruledata", "http://www.satimetry.com/msg.php");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+   	print(drools.getRule().getName() + "->" + $participant.getId() + " - " + $participant.getDayofweek() );
+end
+
+rule "ruleExpectedCount"
+  salience -100
+  no-loop true
+  when
+    $participant : Participant( dayofweek == "Sun" )
+    $obsCountTotal : Number( intValue > 0) from accumulate(
+      Observation( $obsCount : obsvalue >= 0, $participant.id == id ) over window:time( 60d ),
+      count( $obsCount ) )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+//    joutput.put("rulemsg", "Nudge says that for " + $participant.getGastype() + " you attained your expected outcome or better " + $obsCountTotal + " times in the past 60 days.");
+    joutput.put("rulemsg", "Nudge says for " + $participant.getGastype() + " you attained your expected outcome or better " + $obsCountTotal + " times in past 60 days");
+  	joutput.put("ruledata", "http://www.satimetry.com/msg.php");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+   	print(drools.getRule().getName() + "->" + $participant.getId() + " - " + $participant.getDayofweek() );
+end
+
+rule "ruleDailySurveyReminder"
+  salience -300
+  when
+    $participant : Participant()
+    $obsCountTotal : Number( intValue > 0) from accumulate(
+      Observation( $obsCount : obsvalue > -10000000, $participant.id == id ) over window:time( 5d ),
+      count( $obsCount ) )
+  then
+    Date today = new Date();
+
+    java.util.Date date = new Date();
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+    String datef = sdf.format( date );
+
+    JSONObject joutput = new JSONObject();
+    joutput.put("id", $participant.getId());
+    joutput.put("rulename", drools.getRule().getName());
+    joutput.put("ruledate", datef);
+//    joutput.put("rulemsg", 
+//      "Reminder to record your goal " + $participant.getGastype() + " attainment at http://www.satimetry.com/goal.php?ruletype=gaslow" +
+//      " You have completed " +  $obsCountTotal + " self-reports over the past 5 days.");
+    joutput.put("rulemsg", 
+      "Reminder to record goal " + $participant.getGastype() + " attainment at http://www.satimetry.com/goal.php?ruletype=gaslow");
+    joutput.put("ruledata", "http://www.satimetry.com/goal.php?ruletype=gaslow");
+    Output $output = new Output(joutput.toString());
+    insert($output);
+    print(drools.getRule().getName() + "->" + $participant.getId());
+end
+

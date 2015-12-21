@@ -1,0 +1,79 @@
+Check jenkins server application status ...
+Jenkins Application is already started
+Check jenkins client application status ...
+Jenkins Client is already started
+Check nudge database application status ...
+Nudge Database Application is already started
+Check nudge client application status ...
+Nudge Client Application is already started
+Check nudge server application status ...
+Nudge Server Application is already started
+Do Solar ...
+Loading required package: methods
+Loading required package: bitops
+[1] "--->INSERTOBS --7"
+
+> Sys.setenv(NOAWT = "true")
+
+> library(httr)
+
+> library(rjson)
+
+> library("RCurl")
+
+> user <- getUser(rooturl, userid)
+
+> username <- user["username"]
+
+> filepath <- "~/SolarMax/Data/"
+
+> processedfilepath <- "~/SolarMax/Processed/"
+
+> maxobsdate <- getMaxobsdate(rooturl, programid, userid, 
++     obsname)
+
+> maxobsdate <- as.POSIXct(maxobsdate, format = "%Y-%m-%d %H:%M:%OS", 
++     origin = "1970-01-01", tz = "Australia/Sydney")
+
+> if (is.na(maxobsdate)) {
++     maxobsdate <- as.POSIXct("1970-01-01 00:00:00.000", format = "%Y-%m-%d %H:%M:%OS", 
++         origin = "1970-01-01",  .... [TRUNCATED] 
+
+> maxobsdate <- as.numeric(maxobsdate)
+
+> csvDF <- c()
+
+> inputsolarDF <- c()
+
+> listfiles <- list.files(path = filepath, pattern = "Nudge-Monitor")
+
+> for (file in listfiles) {
++     csvDF <- read.csv(file = paste(filepath, file, sep = ""), 
++         header = FALSE, sep = ";", stringsAsFactors = F .... [TRUNCATED] 
+
+> if (is.data.frame(inputsolarDF) && nrow(inputsolarDF) > 
++     0) {
++     colnamesDF <- read.csv(file = paste(rootdir, "/SolarHeaders.csv", 
++       .... [TRUNCATED] 
+[1] "--->APPLYNUDGES --7"
+
+> Sys.setenv(NOAWT = "true")
+
+> library(rjson)
+
+> userobsDF <- getUserobsDF(rooturl, programid, userid, 
++     obsname)
+
+> if (nrow(userobsDF) > 1000) {
++     userobsDF <- subset(userobsDF, regexpr(Sys.Date(), userobsDF[, 
++         "obsdate"]) > 0)
++ }
+
+> delFact(rooturl, programid, groupid = userid, factname = obsname)
+[1] ""
+
+> postFact(rooturl, programid, groupid = userid, factname = obsname, 
++     userobsDF)
+Error in userobsDF[i, "obsname"] : subscript out of bounds
+Calls: source -> withVisible -> eval -> eval -> postFact
+Execution halted

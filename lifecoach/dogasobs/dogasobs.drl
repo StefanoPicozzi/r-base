@@ -1,0 +1,205 @@
+import java.util.HashMap;
+import org.json.JSONObject;
+import java.util.Date; 
+import java.text.SimpleDateFormat; 
+import com.satimetry.nudge.Output;
+
+global java.util.HashMap output;
+global SimpleDateFormat inSDF;
+global SimpleDateFormat outSDF;
+
+function void print(String txt) {
+   System.out.println(txt);
+}
+
+
+// Declare inside drl so we can manipulate objects naturally
+declare Participant
+   @role( fact )
+   id : String @key
+   gasboundary1 : Number
+   gasboundary2 : Number
+   gasboundary3 : Number
+   gasboundary4 : Number
+end
+
+
+// Declare inside drl so we can manipulate objects naturally
+declare Observation
+  @role( event )
+  @timestamp ( obsdate )
+  id : String @key
+  obsdate : Date @key
+  obsvalue : Number
+end
+
+
+// Declare inside drl so we can manipulate objects naturally
+declare Result
+  @role( fact )
+  id : String @key
+  resultcount : Number
+end
+
+
+rule "ruleInsertParticipant"
+   salience 3000
+   when
+      $input : JSONObject() from entry-point DEFAULT 
+      not Participant( id == $input.get("username").toString() )
+   then
+      Participant $participant = new Participant( $input.get("username").toString() );
+      $participant.setGasboundary1( Integer.parseInt($input.get("gasboundary1").toString()) );
+      $participant.setGasboundary2( Integer.parseInt($input.get("gasboundary2").toString()) );
+      $participant.setGasboundary3( Integer.parseInt($input.get("gasboundary3").toString()) );
+      $participant.setGasboundary4( Integer.parseInt($input.get("gasboundary4").toString()) );
+      insert( $participant );
+      print(drools.getRule().getName() + "->" + $participant.getId() );
+end
+
+
+rule "ruleInsertObservation"
+  salience 2000
+  when
+    $input : JSONObject() from entry-point DEFAULT 
+  then
+    inSDF = new SimpleDateFormat("yyyy-M-d");
+    Date date = inSDF.parse( $input.get("obsdate").toString() );
+    Observation $observation = new Observation($input.get("username").toString(), date);
+    $observation.setObsvalue( Integer.parseInt($input.get("obsvalue").toString()) );
+    insert( $observation );
+    print(drools.getRule().getName() + "->" + $observation.getId() + "-" + $observation.getObsdate() + "-" + $observation.getObsvalue() );
+end
+
+
+rule "ruleInsertResult"
+   salience 1000
+   when
+      $participant : Participant()
+      $resultcount : Number( intValue > 0) from accumulate(
+         Observation( $obsvalue : obsvalue >= 10000, $participant.id == id ) over window:time( 7d ),
+         count( $obsvalue ) )
+   then
+      Result result = new Result($participant.getId());
+      result.setResultcount( $resultcount );
+      insert(result);
+      print(drools.getRule().getName() + "->" + result.getId() + " " + result.getResultcount() );
+end
+
+
+rule "ruleGASWorst"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $result : Result( resultcount < $participant.gasboundary1, $participant.id == id )
+   then
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that you met your worst expected outcome in the past 7 days");
+      joutput.put("ruledata", -2);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "-> -2");
+end
+
+
+rule "ruleGASLess"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $result : Result( resultcount >= $participant.gasboundary1 && resultcount < $participant.gasboundary2, $participant.id == id )
+   then
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that you met your less than expected outcome in the past 7 days");
+      joutput.put("ruledata", -1);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "-> -1");
+end
+
+
+rule "ruleGASExpected"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $result : Result( resultcount >= $participant.gasboundary2 && resultcount < $participant.gasboundary3, $participant.id == id )
+   then
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that you met your expected outcome in the past 7 days");
+      joutput.put("ruledata", 0);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "-> 0");
+end
+
+
+rule "ruleGASMore"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $result : Result( resultcount >= $participant.gasboundary3 && resultcount < $participant.gasboundary4, $participant.id == id )
+   then
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that you met your better than expected outcome in the past 7 days");
+      joutput.put("ruledata", 1);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "-> 1");
+end
+
+
+rule "ruleGASBest"
+   salience -1000
+   no-loop true
+   when
+      $participant : Participant()
+      $result : Result( resultcount >= $participant.gasboundary4, $participant.id == id )
+   then
+      java.util.Date date = new Date();
+      SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+      String datef = sdf.format( date );
+
+      JSONObject joutput = new JSONObject();
+      joutput.put("id", $participant.getId());
+      joutput.put("rulename", drools.getRule().getName());
+      joutput.put("ruledate", datef); 
+      joutput.put("rulemsg", "Nudge says that you met your best expected outcome in the past 7 days");
+      joutput.put("ruledata", 2);
+      Output $output = new Output(joutput.toString());
+      insert($output);
+      print(drools.getRule().getName() + "-> 2");
+end
+
+
+
