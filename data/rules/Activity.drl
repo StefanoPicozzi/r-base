@@ -1,0 +1,119 @@
+package com.redhat.Activitywatcher;
+
+import org.json.JSONObject;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+
+rule "ruleAverageActivity"
+  salience -1000
+  no-loop true
+  dialect "mvel"
+when
+  $participant : Participant()
+  $obsvalueaverage : Number( doubleValue > 0 ) from accumulate(
+    Observation( $obsvalue : obsvalue > 0, $participant.userid == userid, obsname == "activity" ) over window:time( 7d ),
+   	average( $obsvalue ) )
+then
+	Date today = new Date( );
+  java.util.Date date = new Date( );
+  SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-M-d HH:mm:ss zzz" );
+  String datef = sdf.format( date );
+
+	String rulename= new String( drools.getRule().getName( ) );
+	Integer userid = $participant.getUserid( );
+	String factname = new String( "Watch" );
+	String username = new String( $participant.getUsername( ) );
+	String facttxt = new String( "Nudge says that " + username + " Activity averaged " +
+	String.format( "%.2f", $obsvalueaverage ) + " over the past 7 days" );
+
+	JSONObject factjson = new JSONObject( );
+	factjson.put("userid", userid);
+	factjson.put("obsvalue", $obsvalueaverage);
+	factjson.put("facttxt", rulename);
+
+	Fact $fact = new Fact( );
+	$fact.setFactid( 999 );
+	$fact.setFacttype ( 0 );
+	$fact.setFactname( factname );
+	$fact.setFacttxt( facttxt );
+	$fact.setFactjson( factjson.toString( ) );
+	insert( $fact );
+
+  System.out.println( "==> Nudge " + rulename + ":" + $obsvalueaverage );
+end
+
+rule "ruleHighActivity"
+  salience -1000
+  no-loop true
+  dialect "mvel"
+when
+  $participant : Participant()
+  $obsvaluehigh : Number( doubleValue > 0 ) from accumulate(
+    Observation( $obsvalue : obsvalue > 0, $participant.userid == userid, obsname == "activity" ) over window:time( 30d ),
+    max( $obsvalue ) )
+then
+	Date today = new Date( );
+  java.util.Date date = new Date( );
+  SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-M-d HH:mm:ss zzz" );
+  String datef = sdf.format( date );
+
+	String rulename= new String( drools.getRule().getName( ) );
+	Integer userid = $participant.getUserid( );
+	String factname = new String( "Watch" );
+	String username = new String( $participant.getUsername( ) );
+	String facttxt = new String( "Nudge says that " + username + " Activity maximum was " +
+	String.format( "%.2f", $obsvaluehigh ) + " over the past 30 days" );
+
+	JSONObject factjson = new JSONObject( );
+	factjson.put("userid", userid);
+	factjson.put("obsvalue", $obsvaluehigh );
+	factjson.put("facttxt", rulename);
+
+	Fact $fact = new Fact( );
+	$fact.setFactid( 999 );
+	$fact.setFacttype ( 0 );
+	$fact.setFactname( factname );
+	$fact.setFacttxt( facttxt );
+	$fact.setFactjson( factjson.toString( ) );
+	insert( $fact );
+
+  System.out.println( "==> Nudge " + rulename + ":" + $obsvaluehigh );
+end
+
+rule "ruleLowActivity"
+  salience -1000
+  dialect "mvel"
+  no-loop true
+when
+  $participant : Participant()
+  $obsvaluelow : Number( doubleValue > 0 ) from accumulate(
+    Observation( $obsvalue : obsvalue > 0, $participant.userid == userid, obsname == "activity" ) over window:time( 30d ),
+    min( $obsvalue ) )
+then
+	Date today = new Date( );
+  java.util.Date date = new Date( );
+  SimpleDateFormat sdf = new SimpleDateFormat( "yyyy-M-d HH:mm:ss zzz" );
+  String datef = sdf.format( date );
+
+	String rulename= new String( drools.getRule().getName( ) );
+	Integer userid = $participant.getUserid( );
+	String factname = new String( "Watch" );
+	String username = new String( $participant.getUsername( ) );
+	String facttxt = new String( "Nudge says that " + username + " Activity minimum was " +
+	String.format( "%.2f", $obsvaluelow ) + " over the past 30 days" );
+
+	JSONObject factjson = new JSONObject( );
+	factjson.put("userid", userid);
+	factjson.put("obsvalue", $obsvaluelow );
+	factjson.put("facttxt", rulename);
+
+	Fact $fact = new Fact( );
+	$fact.setFactid( 999 );
+	$fact.setFacttype ( 0 );
+	$fact.setFactname( factname );
+	$fact.setFacttxt( facttxt );
+	$fact.setFactjson( factjson.toString( ) );
+	insert( $fact );
+
+  System.out.println( "==> Nudge " + rulename + ":" + $obsvaluelow );
+end

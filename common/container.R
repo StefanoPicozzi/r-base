@@ -1,5 +1,5 @@
 
-getWeightObservations <- function( username, fitbitkey, fitbitsecret, fitbitappname) {
+getFitbitObservations <- function( username, obsname, fitbitkey, fitbitsecret, fitbitappname) {
 
   token_url <- "https://api.fitbit.com/oauth/request_token"
   access_url <- "https://api.fitbit.com/oauth/access_token"
@@ -13,41 +13,53 @@ getWeightObservations <- function( username, fitbitkey, fitbitsecret, fitbitappn
   sig <- sign_oauth1.0(app=fbr, token=token$oauth_token, token_secret=token$oauth_token_secret)
   
   startdate <- Sys.Date()-30
-  enddate <- paste(Sys.Date()+1, ".json", sep="")   
+  enddate <- paste(Sys.Date(), ".json", sep="")
   
-  getURL <- "https://api.fitbit.com/1/user/-/body/log/weight/date/"
-  getURL <- paste(getURL, startdate, "/", enddate, sep = "")
+  if (obsname == "weight") {
+    getURL <- "https://api.fitbit.com/1/user/-/body/log/weight/date/"
+    getURL <- paste(getURL, startdate, "/", enddate, sep = "")
+  } else if (obsname == "activity") {
+    getURL <- "https://api.fitbit.com/1/user/-/activities/steps/date/"
+    getURL <- paste(getURL, startdate, "/", enddate, sep = "")  
+  }
   print(getURL)
   
-  weightJSON <- tryCatch({
+  obsJSON <- tryCatch({
     GET(getURL, sig)
   }, warning = function(w) {
-    print("Warning weight")
+    print("Warning GET obs")
     stop()
   }, error = function(e) {
     print(geterrmessage())
-    print("Error GET fitbit weight")
+    print("Error GET obs")
     stop()
   }, finally = {
   })
   
-  if ( length(content(weightJSON)$`weight`) == 0 ) { stop("No fitbit weight records") }
+  if (obsname == "weight") if ( length(content(obsJSON)$`weight`) == 0 ) { stop("No observation records.") }
+  if (obsname == "activity") if ( length(content(obsJSON)$`activities-steps`) == 0 ) { stop("No observation records.") }
   
-  weightDF <- NULL
+  obsDF <- NULL
   
-  for (i in 1:length(content(weightJSON)$`weight`)) {
-    row <- c( username, paste(content(weightJSON)$`weight`[i][[1]][['date']], " 07:15:00", sep=""), content(weightJSON)$`weight`[i][[1]][['weight']] )
-    weightDF <- rbind(weightDF, c(row))
+  if (obsname == "weight") {
+    for (i in 1:length(content(obsJSON)$`weight`)) {
+      row <- c( username, paste(content(obsJSON)$`weight`[i][[1]][['date']], " 07:15:00", sep=""), content(obsJSON)$`weight`[i][[1]][['weight']] )
+      obsDF <- rbind(obsDF, c(row))
+    }
+  } else if (obsname == "activity") {
+    for (i in 1:length(content(obsJSON)$`activities-steps`)) {
+      row <- c( username, paste(content(obsJSON)$`activities-steps`[i][[1]][['dateTime']], " 07:15:00", sep=""), content(obsJSON)$`activities-steps`[i][[1]][['value']] )
+      obsDF <- rbind(obsDF, c(row))
+    }
   }
   
-  colnames(weightDF) = c("username", "obsdate", "obsvalue")
-  
-  return(weightDF)
+  colnames(obsDF) = c("username", "obsdate", "obsvalue")
+  return(obsDF)
 }
 
 putKIEContainer <- function( url ) {
 
-  fileName <- 'templates/put-KIEcontainer.xml';
+  fileName <- paste(templatesdir, '/put-KIEcontainer.xml', sep="");
   request <- readChar( fileName, file.info(fileName)$size )
   
   header=c(Connection="close", 'Content-Type'="application/xml; charset=utf-8", 'Content-length'=nchar(request))
@@ -94,7 +106,7 @@ postNudgeRequest <- function( url, request ) {
   return(list)
 }
 
-buildNudgeRequest <- function( userid, username, DF ) {
+buildNudgeRequest <- function( userid, username, obsname, obsDF ) {
   
   factbody <- ''
   # Participants
@@ -104,7 +116,7 @@ buildNudgeRequest <- function( userid, username, DF ) {
   factbody <- paste(factbody, fact, sep=" ")
   
   # Goals
-  fileName <- paste(usersdir, username, '/Goal/fact.xml', sep="");
+  fileName <- paste(usersdir, username, '/Goal/', obsname, '/fact.xml', sep="");
   fact <- readChar( fileName, file.info(fileName)$size )
   factbody <- paste(factbody, fact, sep=" ")
   
@@ -113,10 +125,10 @@ buildNudgeRequest <- function( userid, username, DF ) {
   fileName <- paste(templatesdir, '/fact.xml', sep="");
   factname <- "Observation"
   
-  for ( i in 1:nrow(weightDF) ) {
+  for ( i in 1:nrow(obsDF) ) {
     fact <- readChar( fileName, file.info(fileName)$size )
     factid <- factid+1
-    factjson <- paste('{ "userid" : ', userid, ', "obsdate" : "', DF[i, "obsdate"], ' EST",', ' "obsname" : "weight", "obsvalue" : ', as.integer(DF[i, "obsvalue"]), ' }', sep="")
+    factjson <- paste('{ "userid" : ', userid, ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsname, '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
     fact <- gsub("$(factid)", factid, fact, fixed=TRUE)
     fact <- gsub("$(factname)", factname, fact, fixed=TRUE)
     fact <- gsub("$(factjson)", factjson, fact, fixed=TRUE)
@@ -131,7 +143,7 @@ buildNudgeRequest <- function( userid, username, DF ) {
   
   print(request)
   return(request)
-  
+
 }
 
 sendPushover <- function(pushoveruser, msgtxt) {

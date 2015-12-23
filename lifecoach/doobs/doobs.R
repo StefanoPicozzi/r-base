@@ -23,5 +23,9 @@ for (programuser in programusers) {
    obsname <<- "weight"
    print(paste("--->OBS weight", userid, sep = ""))
    source("lifecoach/doobs/dowithingsobs-weight.R", echo = TRUE )
-   
+
+   obsname <<- "fat"
+   print(paste("--->OBS fat", userid, sep = ""))
+   source("lifecoach/doobs/dowithingsobs-fat.R", echo = TRUE )
+
 }

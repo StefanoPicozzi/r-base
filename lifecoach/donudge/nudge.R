@@ -10,6 +10,8 @@ source("common/globals.R")
 source("common/common.R")
 source("common/container.R")
 
+obsname <- "gas31"
+
 # Get user details for userid
 user <- getUser(rooturl, userid)
 username <- user['username']
@@ -18,11 +20,12 @@ fitbitkey <- user['fitbitkey']
 fitbitsecret <- user['fitbitsecret']
 fitbitappname <- user['fitbitappname']
 
-weightDF <- getWeightObservations( username, fitbitkey, fitbitsecret, fitbitappname )
-
-containerurl <- paste( containerurl, "/kie-server/services/rest/server/containers/instances/watch", sep = "" )
-
-request <- buildNudgeRequest( userid = userid, username, weightDF )
+if (obsname == "gas31") {
+   obsDF <- getUserobsDF(rooturl, programid, userid, obsname)
+} else {
+   obsDF <- getFitbitObservations( username, obsname, fitbitkey, fitbitsecret, fitbitappname )
+}
+request <- buildNudgeRequest( userid=userid, username, obsname, obsDF )
 list <- postNudgeRequest( containerurl, request )
 
 for ( i in 2:(length(list$result)-2) ) {
