@@ -1,0 +1,7 @@
+<com.redhat.weightwatcher.Fact>
+	<factid>1</factid>
+	<facttype>1</facttype>
+	<factname>Goal</factname>
+	<factjson>{ "userid" : 7, "goalname" : "gas31", target : 0, start : -2, low : -2, high : 2 }</factjson>
+	<facttxt>Incoming Goal JSON</facttxt>
+</com.redhat.weightwatcher.Fact>

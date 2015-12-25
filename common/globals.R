@@ -1,4 +1,7 @@
 
+jbossuser <<- "admin"
+jbosspassword <<- "admin"
+
 rootdir <<- paste(getwd(), "/lifecoach", sep="")
 datadir <<- paste(getwd(), "/lifecoach/data", sep="")
 
@@ -7,7 +10,7 @@ if ( !exists("userid") ) { userid <<- 7 }
 if ( !exists("programid") ) { programid <<- 1 }
 if ( !exists("obsname") ) { obsname <<- "weight" }
 
-containerurl <<- "http://192.168.99.100:8080"
+containerurl <<- "http://192.168.99.100:8081"
 #containerurl <<- "http://weightwatcher.cloudapps.example.com"
 #containerurl <<- "http://192.168.59.103:8080"
 containerurl <- paste( containerurl, "/kie-server/services/rest/server/containers/instances/watch", sep = "" )

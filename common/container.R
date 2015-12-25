@@ -1,5 +1,5 @@
 
-getFitbitObservations <- function( username, obsname, fitbitkey, fitbitsecret, fitbitappname) {
+getFitbitObservations <- function( userid, username, obsname, fitbitkey, fitbitsecret, fitbitappname) {
 
   token_url <- "https://api.fitbit.com/oauth/request_token"
   access_url <- "https://api.fitbit.com/oauth/access_token"
@@ -40,20 +40,20 @@ getFitbitObservations <- function( username, obsname, fitbitkey, fitbitsecret, f
   if (obsname == "activity") if ( length(content(obsJSON)$`activities-steps`) == 0 ) { stop("No observation records.") }
   
   obsDF <- NULL
-  
+
   if (obsname == "weight") {
     for (i in 1:length(content(obsJSON)$`weight`)) {
-      row <- c( username, paste(content(obsJSON)$`weight`[i][[1]][['date']], " 07:15:00", sep=""), content(obsJSON)$`weight`[i][[1]][['weight']] )
+      row <- c( userid, obsname, paste(content(obsJSON)$`weight`[i][[1]][['date']], " 07:15:00", sep=""), content(obsJSON)$`weight`[i][[1]][['weight']] )
       obsDF <- rbind(obsDF, c(row))
     }
   } else if (obsname == "activity") {
     for (i in 1:length(content(obsJSON)$`activities-steps`)) {
-      row <- c( username, paste(content(obsJSON)$`activities-steps`[i][[1]][['dateTime']], " 07:15:00", sep=""), content(obsJSON)$`activities-steps`[i][[1]][['value']] )
+      row <- c( userid, obsname, paste(content(obsJSON)$`activities-steps`[i][[1]][['dateTime']], " 07:15:00", sep=""), content(obsJSON)$`activities-steps`[i][[1]][['value']] )
       obsDF <- rbind(obsDF, c(row))
     }
   }
   
-  colnames(obsDF) = c("username", "obsdate", "obsvalue")
+  colnames(obsDF) = c("userid", "obsname", "obsdate", "obsvalue")
   return(obsDF)
 }
 
@@ -65,7 +65,7 @@ putKIEContainer <- function( url ) {
   header=c(Connection="close", 'Content-Type'="application/xml; charset=utf-8", 'Content-length'=nchar(request))
   
   response <- tryCatch({
-    PUT(url, body=request, content_type_xml(), header=header, verbose(), authenticate("erics", "jbossbrms1!", type="basic"))
+    PUT(url, body=request, content_type_xml(), header=header, verbose(), authenticate(jbossuser, jbosspassword, type="basic"))
   }, warning = function(w) {
     print("Warning POST")
     stop()
@@ -84,7 +84,7 @@ postNudgeRequest <- function( url, request ) {
   header=c(Connection="close", 'Content-Type'="application/xml; charset=utf-8", 'Content-length'=nchar(request))
   
   response <- tryCatch({
-    POST(url, body=request, content_type_xml(), header=header, add_headers('X-KIE-ContentType'="XSTREAM"), verbose(), authenticate("erics", "jbossbrms1!", type="basic"))
+    POST(url, body=request, content_type_xml(), header=header, add_headers('X-KIE-ContentType'="XSTREAM"), verbose(), authenticate(jbossuser, jbosspassword, type="basic"))
   }, warning = function(w) {
     print("Warning POST")
     stop()
@@ -104,6 +104,59 @@ postNudgeRequest <- function( url, request ) {
   list <- xmlToList(xmlTreeParse(response))
   
   return(list)
+}
+
+buildParticipantFact <- function( username ) {
+   factbody <- ''
+   factid <- 0
+   fileName <- paste(usersdir, username, '/Participant/fact.xml', sep="");
+   fact <- readChar( fileName, file.info(fileName)$size )
+   factbody <- paste(factbody, fact, sep=" ")
+   return(factbody)
+}
+
+buildGASFact <- function( username, goalname ) {
+   factbody <- ''
+   factid <- 0
+   fileName <- paste(usersdir, username, '/GAS/', goalname, '/fact.xml', sep="");
+   fact <- readChar( fileName, file.info(fileName)$size )
+   factbody <- paste(factbody, fact, sep=" ")
+   return(factbody)
+}
+
+buildGoalFact <- function( username, obsname ) {
+   factbody <- ''
+   factid <- 0
+   fileName <- paste(usersdir, username, '/Goal/', obsname, '/fact.xml', sep="");
+   fact <- readChar( fileName, file.info(fileName)$size )
+   factbody <- paste(factbody, fact, sep=" ")
+   return(factbody)
+}
+
+buildObservationFact <- function( obsDF ) {
+   factbody <- ''
+   factid <- 0
+   fileName <- paste(templatesdir, '/fact.xml', sep="");
+   factname <- "Observation"
+   for ( i in 1:nrow(obsDF) ) {
+      fact <- readChar( fileName, file.info(fileName)$size )
+      factid <- factid+1
+      factjson <- paste('{ "userid" : ', obsDF[i, "userid"], ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsDF[i, "obsname"], '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
+      fact <- gsub("$(factid)", factid, fact, fixed=TRUE)
+      fact <- gsub("$(factname)", factname, fact, fixed=TRUE)
+      fact <- gsub("$(factjson)", factjson, fact, fixed=TRUE)
+      factbody <- paste(factbody, fact, sep=" ")
+   }
+   return(factbody)
+}
+
+buildEnvelopeRequest <- function( factbody ) {
+   fileName <- paste(templatesdir, '/fact-envelope.xml', sep="");
+   envelope <- readChar( fileName, file.info(fileName)$size )
+   request <- gsub("$(factbody)", factbody, envelope, fixed=TRUE)
+   write( request, "input.xml" )
+   print(request)
+   return(request)
 }
 
 buildNudgeRequest <- function( userid, username, obsname, obsDF ) {
@@ -128,7 +181,7 @@ buildNudgeRequest <- function( userid, username, obsname, obsDF ) {
   for ( i in 1:nrow(obsDF) ) {
     fact <- readChar( fileName, file.info(fileName)$size )
     factid <- factid+1
-    factjson <- paste('{ "userid" : ', userid, ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsname, '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
+    factjson <- paste('{ "userid" : ', obsDF[i, "userid"], ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsDF[i, "obsname"], '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
     fact <- gsub("$(factid)", factid, fact, fixed=TRUE)
     fact <- gsub("$(factname)", factname, fact, fixed=TRUE)
     fact <- gsub("$(factjson)", factjson, fact, fixed=TRUE)

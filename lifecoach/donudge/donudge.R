@@ -15,7 +15,7 @@ for (programuser in programusers) {
 
    if ( userid != 7 ) { next }
 
-   obsname <- "activity"
+   obsname <<- "activity"
    print(paste("---> Nudge activity ", userid, sep = ""))
    tryCatch({
       source("lifecoach/donudge/nudge.R", echo = TRUE )
@@ -24,7 +24,7 @@ for (programuser in programusers) {
    }, finally = {
    })
 
-   obsname <- "weight"
+   obsname <<- "weight"
    print(paste("---> Nudge weight ", userid, sep = ""))
    tryCatch({
       source("lifecoach/donudge/nudge.R", echo = TRUE )
@@ -33,7 +33,7 @@ for (programuser in programusers) {
    }, finally = {
    })
 
-   obsname <- "gas31"
+   obsname <<- "gas31"
    print(paste("---> Nudge gas31 ", userid, sep = ""))
    tryCatch({
       source("lifecoach/donudge/nudge.R", echo = TRUE )

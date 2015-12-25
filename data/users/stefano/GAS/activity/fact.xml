@@ -1,0 +1,20 @@
+<com.redhat.weightwatcher.Fact>
+	<factid>1</factid>
+	<facttype>1</facttype>
+	<factname>GAS</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "steps",
+		"besthi"  : 50000,
+		"bestlo"  : 15000,
+		"morehi"  : 14999,
+		"morelo"  : 12000,
+		"exphi"   : 11999,
+		"explo"   : 10000,
+		"lesshi"  :  9999,
+		"lesslo"  :  5001,
+		"worsthi" :  5000,
+		"worstlo" :     0,
+	} </factjson>
+	<facttxt>Incoming GAS JSON</facttxt>
+</com.redhat.weightwatcher.Fact>

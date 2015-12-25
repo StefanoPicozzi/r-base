@@ -10,7 +10,9 @@ source("common/globals.R")
 source("common/common.R")
 source("common/container.R")
 
-obsname <- "gas31"
+# obsname <- "all"
+obsname <- "activity"
+# obsname <- "gas31"
 
 # Get user details for userid
 user <- getUser(rooturl, userid)
@@ -22,10 +24,19 @@ fitbitappname <- user['fitbitappname']
 
 if (obsname == "gas31") {
    obsDF <- getUserobsDF(rooturl, programid, userid, obsname)
+} else if (obsname == "all") {
+   obsDF <- getFitbitObservations( userid, username, obsname="activity", fitbitkey, fitbitsecret, fitbitappname )
+   obsDF <- rbind( obsDF, getFitbitObservations( userid, username, obsname="weight", fitbitkey, fitbitsecret, fitbitappname ) )
+   obsDF <- rbind( obsDF, getUserobsDF(rooturl, programid, userid, obsname="gas31") )
 } else {
-   obsDF <- getFitbitObservations( username, obsname, fitbitkey, fitbitsecret, fitbitappname )
+   obsDF <- getFitbitObservations( userid, username, obsname, fitbitkey, fitbitsecret, fitbitappname )
 }
-request <- buildNudgeRequest( userid=userid, username, obsname, obsDF )
+
+factbody <- buildParticipantFact( username )
+factbody <- paste(factbody, buildGASFact( username, "steps" ), sep=" ")
+factbody <- paste(factbody, buildGoalFact( username, obsname ), sep=" ")
+factbody <- paste(factbody, buildObservationFact( obsDF ), sep=" ")
+request <- buildEnvelopeRequest( factbody )
 list <- postNudgeRequest( containerurl, request )
 
 for ( i in 2:(length(list$result)-2) ) {

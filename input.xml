@@ -8,333 +8,248 @@
 	<factjson>{ "userid" : 7, "username" : "stefano" }</factjson>
 	<facttxt>Incoming Participant JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
+  <com.redhat.weightwatcher.Fact>
+	<factid>1</factid>
+	<facttype>1</facttype>
+	<factname>GAS</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "activity",
+		"besthi"  : 50000,
+		"bestlo"  : 17000,
+		"morehi"  : 16999,
+		"morelo"  : 13000,
+		"exphi"   : 12999,
+		"explo"   : 10000,
+		"lesshi"  :  9999,
+		"lesslo"  :  6000,
+		"worsthi" :  5999,
+		"worstlo" :     0,
+	} </factjson>
+	<facttxt>Incoming GAS JSON</facttxt>
+</com.redhat.weightwatcher.Fact>
+  <com.redhat.weightwatcher.Fact>
 	<factid>1</factid>
 	<facttype>1</facttype>
 	<factname>Goal</factname>
-	<factjson>{ "userid" : 7, "goalname" : "gas31", target : 0, start : -2, low : -2, high : 2 }</factjson>
+	<factjson>{ "userid" : 7, "goalname" : "activity", target : 10000, start : 7500, low : 5000, high : 20000 }</factjson>
 	<facttxt>Incoming Goal JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
+  <com.redhat.weightwatcher.Fact>
 	<factid>1</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-02-08 22:30:00 EST", "obsname" : "gas31", "obsvalue" : 2 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-11-25 07:15:00 EST", "obsname" : "activity", "obsvalue" : 6646 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>2</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-02-15 22:30:00 EST", "obsname" : "gas31", "obsvalue" : 1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-11-26 07:15:00 EST", "obsname" : "activity", "obsvalue" : 10618 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>3</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-02-22 22:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-11-27 07:15:00 EST", "obsname" : "activity", "obsvalue" : 10012 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>4</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-03-01 22:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-11-28 07:15:00 EST", "obsname" : "activity", "obsvalue" : 11314 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>5</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-03-08 21:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-11-29 07:15:00 EST", "obsname" : "activity", "obsvalue" : 19630 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>6</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-03-15 21:30:00 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-11-30 07:15:00 EST", "obsname" : "activity", "obsvalue" : 14011 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>7</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-03-22 21:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-01 07:15:00 EST", "obsname" : "activity", "obsvalue" : 18315 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>8</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-03-29 21:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-02 07:15:00 EST", "obsname" : "activity", "obsvalue" : 14412 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>9</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-04-05 20:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-03 07:15:00 EST", "obsname" : "activity", "obsvalue" : 19488 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>10</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-04-12 20:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-04 07:15:00 EST", "obsname" : "activity", "obsvalue" : 9134 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>11</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-04-19 20:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-05 07:15:00 EST", "obsname" : "activity", "obsvalue" : 14749 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>12</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-04-26 20:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-06 07:15:00 EST", "obsname" : "activity", "obsvalue" : 9089 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>13</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-05-03 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-07 07:15:00 EST", "obsname" : "activity", "obsvalue" : 7370 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>14</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-05-10 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-08 07:15:00 EST", "obsname" : "activity", "obsvalue" : 11201 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>15</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-05-17 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-09 07:15:00 EST", "obsname" : "activity", "obsvalue" : 5045 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>16</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-05-24 20:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-10 07:15:00 EST", "obsname" : "activity", "obsvalue" : 10013 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>17</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-05-31 20:30:00 EST", "obsname" : "gas31", "obsvalue" : 1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-11 07:15:00 EST", "obsname" : "activity", "obsvalue" : 11071 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>18</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-06-07 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-12 07:15:00 EST", "obsname" : "activity", "obsvalue" : 19208 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>19</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-06-14 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-13 07:15:00 EST", "obsname" : "activity", "obsvalue" : 8122 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>20</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-06-21 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-14 07:15:00 EST", "obsname" : "activity", "obsvalue" : 6228 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>21</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-06-28 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-15 07:15:00 EST", "obsname" : "activity", "obsvalue" : 17002 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>22</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-07-05 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-16 07:15:00 EST", "obsname" : "activity", "obsvalue" : 10045 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>23</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-07-12 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-17 07:15:00 EST", "obsname" : "activity", "obsvalue" : 16207 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>24</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-07-19 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-18 07:15:00 EST", "obsname" : "activity", "obsvalue" : 7141 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>25</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-07-26 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-19 07:15:00 EST", "obsname" : "activity", "obsvalue" : 13065 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>26</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-08-02 20:45:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-20 07:15:00 EST", "obsname" : "activity", "obsvalue" : 13167 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>27</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-08-09 11:35:10 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-21 07:15:00 EST", "obsname" : "activity", "obsvalue" : 17466 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>28</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-08-16 16:31:14 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-22 07:15:00 EST", "obsname" : "activity", "obsvalue" : 13669 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>29</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-08-23 20:30:00 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-23 07:15:00 EST", "obsname" : "activity", "obsvalue" : 16189 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>30</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-08-30 14:01:43 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-24 07:15:00 EST", "obsname" : "activity", "obsvalue" : 12201 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
  <com.redhat.weightwatcher.Fact>
 	<factid>31</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-09-06 08:38:13 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>32</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-09-13 08:38:13 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>33</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-09-20 14:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>34</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-09-27 14:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>35</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-10-04 15:31:28 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>36</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-10-11 15:31:28 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>37</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-10-18 15:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>38</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-10-25 15:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>39</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-11-01 16:31:28 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>40</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-11-08 16:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>41</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-11-15 16:31:28 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>42</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-11-22 16:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>43</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-11-29 16:31:28 EST", "obsname" : "gas31", "obsvalue" : -1 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>44</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-12-06 22:30:00 EST", "obsname" : "gas31", "obsvalue" : -2 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>45</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-12-13 22:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
-	<facttxt>Incoming Observation JSON</facttxt>
-</com.redhat.weightwatcher.Fact>
- <com.redhat.weightwatcher.Fact>
-	<factid>46</factid>
-	<facttype>1</facttype>
-	<factname>Observation</factname>
-	<factjson>{ "userid" : 7, "obsdate" : "2015-12-20 22:30:00 EST", "obsname" : "gas31", "obsvalue" : 0 }</factjson>
+	<factjson>{ "userid" : 7, "obsdate" : "2015-12-25 07:15:00 EST", "obsname" : "activity", "obsvalue" : 10651 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
 
