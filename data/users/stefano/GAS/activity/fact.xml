@@ -4,17 +4,82 @@
 	<factname>GAS</factname>
 	<factjson> {
 		"userid" : 7,
-		"goalname" : "steps",
+		"goalname" : "activity",
 		"besthi"  : 50000,
-		"bestlo"  : 15000,
-		"morehi"  : 14999,
-		"morelo"  : 12000,
-		"exphi"   : 11999,
+		"bestlo"  : 17000,
+		"morehi"  : 16999,
+		"morelo"  : 13000,
+		"exphi"   : 12999,
 		"explo"   : 10000,
 		"lesshi"  :  9999,
-		"lesslo"  :  5001,
-		"worsthi" :  5000,
+		"lesslo"  :  6000,
+		"worsthi" :  5999,
 		"worstlo" :     0,
 	} </factjson>
 	<facttxt>Incoming GAS JSON</facttxt>
+</com.redhat.weightwatcher.Fact>
+<com.redhat.weightwatcher.Fact>
+	<factid>1</factid>
+	<facttype>1</facttype>
+	<factname>GoalScore</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "activity",
+		"score"   : -2,
+		"high"    :  5999,
+		"low"     :     0,
+	} </factjson>
+	<facttxt>Incoming GoalScore JSON</facttxt>
+</com.redhat.weightwatcher.Fact>
+<com.redhat.weightwatcher.Fact>
+	<factid>2</factid>
+	<facttype>1</facttype>
+	<factname>GoalScore</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "activity",
+		"score"   : -1,
+		"high"    :  9999,
+		"low"     :  6000,
+	} </factjson>
+	<facttxt>Incoming GoalScore JSON</facttxt>
+</com.redhat.weightwatcher.Fact>
+<com.redhat.weightwatcher.Fact>
+	<factid>3</factid>
+	<facttype>1</facttype>
+	<factname>GoalScore</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "activity",
+		"score"   : 0,
+		"high"    : 12999,
+		"low"     : 10000,
+	} </factjson>
+	<facttxt>Incoming GoalScore JSON</facttxt>
+</com.redhat.weightwatcher.Fact>
+<com.redhat.weightwatcher.Fact>
+	<factid>4</factid>
+	<facttype>1</facttype>
+	<factname>GoalScore</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "activity",
+		"score"   : 1,
+		"high"    : 16999,
+		"low"     : 13000,
+	} </factjson>
+	<facttxt>Incoming GoalScore JSON</facttxt>
+</com.redhat.weightwatcher.Fact>
+<com.redhat.weightwatcher.Fact>
+	<factid>5</factid>
+	<facttype>1</facttype>
+	<factname>GoalScore</factname>
+	<factjson> {
+		"userid" : 7,
+		"goalname" : "activity",
+		"score"   : 2,
+		"high"    : 49999,
+		"low"     : 17000,
+	} </factjson>
+	<facttxt>Incoming GoalScore JSON</facttxt>
 </com.redhat.weightwatcher.Fact>

@@ -2,6 +2,13 @@
 	<factid>1</factid>
 	<facttype>1</facttype>
 	<factname>Goal</factname>
-	<factjson>{ "userid" : 7, "goalname" : "activity", target : 10000, start : 7500, low : 5000, high : 20000 }</factjson>
+	<factjson> { 
+		"userid" : 7,
+		"goalname" : "activity",
+		target : 10000,
+		start : 7500,
+		low : 5000,
+		high : 20000
+	} </factjson>
 	<facttxt>Incoming Goal JSON</facttxt>
 </com.redhat.weightwatcher.Fact>

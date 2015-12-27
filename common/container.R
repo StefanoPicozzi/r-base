@@ -106,6 +106,16 @@ postNudgeRequest <- function( url, request ) {
   return(list)
 }
 
+getNudgeRequest <- function( list, query ) {
+   factDF = c()
+   for ( i in 2:(length(list$result)-2) ) {
+      factjson <- as.character( list$result[[i]]$com.redhat.weightwatcher.Fact$factjson )
+      fact <- fromJSON( list$result[[i]]$com.redhat.weightwatcher.Fact$factjson )
+      factDF <- rbind( factDF, c( userid=fact$userid, goalname=fact$goalname, obsdate=fact$obsdate, score=fact$score ) )
+   }
+   return(factDF)
+}
+
 buildParticipantFact <- function( username ) {
    factbody <- ''
    factid <- 0
@@ -150,10 +160,11 @@ buildObservationFact <- function( obsDF ) {
    return(factbody)
 }
 
-buildEnvelopeRequest <- function( factbody ) {
+buildEnvelopeRequest <- function( factbody, query ) {
    fileName <- paste(templatesdir, '/fact-envelope.xml', sep="");
-   envelope <- readChar( fileName, file.info(fileName)$size )
-   request <- gsub("$(factbody)", factbody, envelope, fixed=TRUE)
+   request <- readChar( fileName, file.info(fileName)$size )
+   request <- gsub("$(factbody)", factbody, request, fixed=TRUE)
+   request <- gsub("$(query)", query, request, fixed=TRUE)
    write( request, "input.xml" )
    print(request)
    return(request)

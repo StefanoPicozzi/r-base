@@ -1,4 +1,4 @@
-package com.redhat.Activitywatcher;
+package com.redhat.weightwatcher;
 
 import org.json.JSONObject;
 import java.util.Date;
@@ -21,7 +21,7 @@ then
 
 	String rulename= new String( drools.getRule().getName( ) );
 	Integer userid = $participant.getUserid( );
-	String factname = new String( "Watch" );
+	String factname = new String( rulename );
 	String username = new String( $participant.getUsername( ) );
 	String facttxt = new String( "Nudge says that " + username + " Activity averaged " +
 	String.format( "%.2f", $obsvalueaverage ) + " over the past 7 days" );
@@ -59,7 +59,7 @@ then
 
 	String rulename= new String( drools.getRule().getName( ) );
 	Integer userid = $participant.getUserid( );
-	String factname = new String( "Watch" );
+	String factname = new String( rulename );
 	String username = new String( $participant.getUsername( ) );
 	String facttxt = new String( "Nudge says that " + username + " Activity maximum was " +
 	String.format( "%.2f", $obsvaluehigh ) + " over the past 30 days" );
@@ -97,7 +97,7 @@ then
 
 	String rulename= new String( drools.getRule().getName( ) );
 	Integer userid = $participant.getUserid( );
-	String factname = new String( "Watch" );
+	String factname = new String( rulename );
 	String username = new String( $participant.getUsername( ) );
 	String facttxt = new String( "Nudge says that " + username + " Activity minimum was " +
 	String.format( "%.2f", $obsvaluelow ) + " over the past 30 days" );

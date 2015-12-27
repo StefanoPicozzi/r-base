@@ -12,7 +12,8 @@ source("common/container.R")
 
 # obsname <- "all"
 obsname <- "activity"
-# obsname <- "gas31"
+# obsname <- "fasting"
+# obsname <- "weight"
 
 # Get user details for userid
 user <- getUser(rooturl, userid)
@@ -22,7 +23,7 @@ fitbitkey <- user['fitbitkey']
 fitbitsecret <- user['fitbitsecret']
 fitbitappname <- user['fitbitappname']
 
-if (obsname == "gas31") {
+if (obsname == "fasting") {
    obsDF <- getUserobsDF(rooturl, programid, userid, obsname)
 } else if (obsname == "all") {
    obsDF <- getFitbitObservations( userid, username, obsname="activity", fitbitkey, fitbitsecret, fitbitappname )
@@ -33,15 +34,19 @@ if (obsname == "gas31") {
 }
 
 factbody <- buildParticipantFact( username )
-factbody <- paste(factbody, buildGASFact( username, "steps" ), sep=" ")
+# factbody <- paste(factbody, buildGASFact( username, "fasting" ), sep=" ")
+factbody <- paste(factbody, buildGASFact( username, "activity" ), sep=" ")
+# factbody <- paste(factbody, buildGASFact( username, "weight" ), sep=" ")
 factbody <- paste(factbody, buildGoalFact( username, obsname ), sep=" ")
 factbody <- paste(factbody, buildObservationFact( obsDF ), sep=" ")
-request <- buildEnvelopeRequest( factbody )
+request <- buildEnvelopeRequest( factbody, query="GoalScore" )
 list <- postNudgeRequest( containerurl, request )
 
-for ( i in 2:(length(list$result)-2) ) {
-  msgtxt <- as.character( list$result[[i]]$com.redhat.weightwatcher.Fact$facttxt )
-  msgtxt <- paste(msgtxt, ". To opt-out from nudges visit: ", "http://www.thenudgemachine.com/rulesettings.php", sep = "")
-  sendPushover(pushoveruser, msgtxt)
-  print( msgtxt )
-}
+factDF <- getNudgeRequest(list, "getFactGAS")
+
+#for ( i in 2:(length(list$result)-2) ) {
+#  msgtxt <- as.character( list$result[[i]]$com.redhat.weightwatcher.Fact$facttxt )
+#  msgtxt <- paste(msgtxt, ". To opt-out from nudges visit: ", "http://www.thenudgemachine.com/rulesettings.php", sep = "")
+#  # sendPushover(pushoveruser, msgtxt)
+#  print( msgtxt )
+#}

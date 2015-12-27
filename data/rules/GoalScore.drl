@@ -1,0 +1,35 @@
+package com.redhat.weightwatcher;
+
+import org.json.JSONObject;
+import java.util.Date;
+import java.text.SimpleDateFormat;
+import com.redhat.weightwatcher.GoalScore;
+
+rule "ruleInsertGoalScore"
+	salience 10000
+    dialect "mvel"
+when
+    fact : Fact( factname == "GoalScore" )
+then
+    JSONObject factjson = new JSONObject( fact.getFactjson( ).toString( ) );
+
+    Integer userid = new Integer( Integer.parseInt( factjson.get("userid").toString( ) ) );
+    String goalname = factjson.get( "goalname" ).toString( );
+	Integer score = new Integer( Integer.parseInt( factjson.get("score").toString( ) ) );
+	Integer low = new Integer( Integer.parseInt( factjson.get("low").toString( ) ) );
+	Integer high = new Integer( Integer.parseInt( factjson.get("high").toString( ) ) );
+
+    GoalScore goalscore = new GoalScore( );
+    goalscore.setUserid( userid );
+    goalscore.setGoalname( goalname );
+	goalscore.setLow ( low );
+	goalscore.setHigh( high );
+    insert( goalscore );
+
+    print("==> Nudge " + drools.getRule( ).getName( ) + "->" +
+	goalscore.getUserid( )  + "~" + goalscore.getGoalname( ) + "~" + goalscore.getUserid( ) + "~" + goalscore.getScore( ) );
+end
+
+query "getGoalScore"
+	observation : GoalScore( )
+end
