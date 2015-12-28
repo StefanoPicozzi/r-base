@@ -125,6 +125,15 @@ buildParticipantFact <- function( username ) {
    return(factbody)
 }
 
+buildOptInOutFact <- function( username ) {
+   factbody <- ''
+   factid <- 0
+   fileName <- paste(usersdir, username, '/OptInOut/fact.xml', sep="");
+   fact <- readChar( fileName, file.info(fileName)$size )
+   factbody <- paste(factbody, fact, sep=" ")
+   return(factbody)
+}
+
 buildGASFact <- function( username, goalname ) {
    factbody <- ''
    factid <- 0
@@ -160,11 +169,12 @@ buildObservationFact <- function( obsDF ) {
    return(factbody)
 }
 
-buildEnvelopeRequest <- function( factbody, query ) {
+buildEnvelopeRequest <- function( factbody, query, params ) {
    fileName <- paste(templatesdir, '/fact-envelope.xml', sep="");
    request <- readChar( fileName, file.info(fileName)$size )
    request <- gsub("$(factbody)", factbody, request, fixed=TRUE)
    request <- gsub("$(query)", query, request, fixed=TRUE)
+   request <- gsub("$(params)", params, request, fixed=TRUE)
    write( request, "input.xml" )
    print(request)
    return(request)

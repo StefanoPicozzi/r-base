@@ -1,0 +1,12 @@
+<com.redhat.weightwatcher.Fact>
+	<factid>1</factid>
+	<facttype>1</facttype>
+	<factname>OptInOut</factname>
+	<factjson> {
+		"programid" : 1,
+		"userid" : 7,
+		"rulename" : "ruleGoalScore",
+		"inorout" : "in"
+	} </factjson>
+	<facttxt>Incoming OptInOut JSON</facttxt>
+</com.redhat.weightwatcher.Fact>

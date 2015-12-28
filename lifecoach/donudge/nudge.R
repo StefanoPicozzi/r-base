@@ -34,12 +34,13 @@ if (obsname == "fasting") {
 }
 
 factbody <- buildParticipantFact( username )
+factbody <- paste(factbody, buildOptInOutFact( username ), sep="") 
 # factbody <- paste(factbody, buildGASFact( username, "fasting" ), sep=" ")
 factbody <- paste(factbody, buildGASFact( username, "activity" ), sep=" ")
 # factbody <- paste(factbody, buildGASFact( username, "weight" ), sep=" ")
 factbody <- paste(factbody, buildGoalFact( username, obsname ), sep=" ")
 factbody <- paste(factbody, buildObservationFact( obsDF ), sep=" ")
-request <- buildEnvelopeRequest( factbody, query="GoalScore" )
+request <- buildEnvelopeRequest( factbody, query="getFactByLabel", params="ruleGoalScore" )
 list <- postNudgeRequest( containerurl, request )
 
 factDF <- getNudgeRequest(list, "getFactGAS")
