@@ -4,18 +4,18 @@
 	<factname>GAS</factname>
 	<factjson> {
 		"programid" : 1,
-		"userid" : 7,
-		"goalname" : "fasting",
-		"besthi"  : 7,
-		"bestlo"  : 4,
-		"morehi"  : 3,
-		"morelo"  : 3,
-		"exphi"   : 2,
-		"explo"   : 2,
-		"lesshi"  : 1,
-		"lesslo"  : 1,
-		"worsthi" : 0,
-		"worstlo" : 0,
+		"userid" : 4,
+		"goalname" : "weight",
+		"besthi"  : 66,
+		"bestlo"  : 65,
+		"morehi"  : 68,
+		"morelo"  : 67,
+		"exphi"   : 70,
+		"explo"   : 69,
+		"lesshi"  : 72,
+		"lesslo"  : 71,
+		"worsthi" : 74,
+		"worstlo" : 73,
 	} </factjson>
 	<facttxt>Incoming GAS JSON</facttxt>
 </com.redhat.weightwatcher.Fact>

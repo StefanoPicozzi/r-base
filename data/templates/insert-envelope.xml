@@ -5,7 +5,5 @@
 
 	</insert-elements>
 	<fire-all-rules/>
-	<query out-identifier="Watch" name="$(query)">
-	$(params)
-	</query>
+
 </batch-execution>

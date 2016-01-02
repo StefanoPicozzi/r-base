@@ -4,8 +4,8 @@
 	<factname>Participant</factname>
 	<factjson> { 
 		"programid" : 1,
-		"userid" : 7, 
-		"username" : "stefano" 
+		"userid" : 4, 
+		"username" : "stephanie" 
 	} </factjson>
 	<facttxt>Incoming Participant JSON</facttxt>
 </com.redhat.weightwatcher.Fact>

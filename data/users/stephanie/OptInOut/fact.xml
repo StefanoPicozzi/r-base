@@ -4,7 +4,7 @@
 	<factname>OptInOut</factname>
 	<factjson> {
 		"programid" : 1,
-		"userid" : 7,
+		"userid" : 4,
 		"groupname" : "GoalScore",
 		"rulename" : "ruleGoalScore",
 		"inorout" : "in"
@@ -18,9 +18,9 @@
 	<factname>OptInOut</factname>
 	<factjson> {
 		"programid" : 1,
-		"userid" : 7,
+		"userid" : 4,
 		"groupname" : "NudgeMsg",
-		"rulename" : "ruleHighObs",
+		"rulename" : "ruleAverageObs",
 		"inorout" : "in"
 	} </factjson>
 	<facttxt>Incoming OptInOut JSON</facttxt>
@@ -32,7 +32,7 @@
 	<factname>OptInOut</factname>
 	<factjson> {
 		"programid" : 1,
-		"userid" : 7,
+		"userid" : 4,
 		"groupname" : "NudgeMsg",
 		"rulename" : "ruleNudgeMsg",
 		"inorout" : "in"

@@ -4,12 +4,12 @@
 	<factname>Goal</factname>
 	<factjson> {
 		"programid" : 1,
-		"userid" : 7,
+		"userid" : 4,
 		"goalname" : "weight",
-		target : 76,
-		start  : 84,
-		low    : 75,
-		high   : 78
+		target : 66,
+		start  : 74,
+		low    : 65,
+		high   : 68
 	} </factjson>
 	<facttxt>Incoming Goal JSON</facttxt>
 </com.redhat.weightwatcher.Fact>

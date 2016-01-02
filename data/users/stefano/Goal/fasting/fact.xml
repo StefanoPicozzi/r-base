@@ -3,6 +3,7 @@
 	<facttype>1</facttype>
 	<factname>Goal</factname>
 	<factjson> {
+		"programid" : 1,
 		"userid" : 7,
 		"goalname" : "fasting",
 		target : 2,

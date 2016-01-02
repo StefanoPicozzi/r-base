@@ -4,7 +4,7 @@
 	<factname>GAS</factname>
 	<factjson> {
 		"programid" : 1,
-		"userid" : 7,
+		"userid" : 4,
 		"goalname" : "fasting",
 		"besthi"  : 7,
 		"bestlo"  : 4,

@@ -3,6 +3,7 @@
 	<facttype>1</facttype>
 	<factname>GAS</factname>
 	<factjson> {
+		"programid" : 1,
 		"userid" : 7,
 		"goalname" : "weight",
 		"besthi"  : 76,

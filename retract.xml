@@ -1,0 +1,56 @@
+<batch-execution lookup="watchsession" >
+
+  
+ <retract fact-handle="0:568:714808347:714808347:568:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.UserFact"/> 
+ <retract fact-handle="0:567:1198427080:1198427080:567:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.UserFact"/> 
+ <retract fact-handle="0:566:2040608810:2040608810:566:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.UserFact"/> 
+ <retract fact-handle="0:398:116731323:116731323:398:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Participant"/> 
+ <retract fact-handle="0:426:1203645703:1203645703:426:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GoalScore"/> 
+ <retract fact-handle="0:427:22201378:22201378:427:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GoalScore"/> 
+ <retract fact-handle="0:428:1623889115:1623889115:428:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GoalScore"/> 
+ <retract fact-handle="0:429:334686082:334686082:429:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GoalScore"/> 
+ <retract fact-handle="0:430:809308681:809308681:430:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GoalScore"/> 
+ <retract fact-handle="0:408:642854775:642854775:408:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GAS"/> 
+ <retract fact-handle="0:414:990263974:990263974:414:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GAS"/> 
+ <retract fact-handle="0:420:2141172657:2141172657:420:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.GAS"/> 
+ <retract fact-handle="0:399:1250775950:1250775950:399:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Goal"/> 
+ <retract fact-handle="0:402:1489384642:1489384642:402:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Goal"/> 
+ <retract fact-handle="0:405:348864433:348864433:405:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Goal"/> 
+ <retract fact-handle="0:395:267015783:267015783:395:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.OptInOut"/> 
+ <retract fact-handle="0:396:1640926298:1640926298:396:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.OptInOut"/> 
+ <retract fact-handle="0:397:1063295712:1063295712:397:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.OptInOut"/> 
+ <retract fact-handle="0:562:740745402:740745402:562:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:561:1371087171:1371087171:561:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:560:1151143621:1151143621:560:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:559:1958476677:1958476677:559:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:558:827468208:827468208:558:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:557:1042512889:1042512889:557:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:556:491900624:491900624:556:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:555:362413374:362413374:555:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:554:1472556551:1472556551:554:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:553:812201039:812201039:553:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:552:245363840:245363840:552:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:551:235809971:235809971:551:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:550:1143187647:1143187647:550:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:549:1715507057:1715507057:549:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:548:971548621:971548621:548:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:547:451968257:451968257:547:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:546:985860539:985860539:546:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:545:1711768588:1711768588:545:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:544:1278779514:1278779514:544:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:543:2081380372:2081380372:543:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:542:1467271449:1467271449:542:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:541:766216425:766216425:541:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:540:1782815913:1782815913:540:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:539:1419250768:1419250768:539:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:538:7689551:7689551:538:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:537:1821579991:1821579991:537:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:536:1984408718:1984408718:536:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:535:618222076:618222076:535:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:534:343659913:343659913:534:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:533:1847138853:1847138853:533:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:532:1042874044:1042874044:532:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Observation"/> 
+ <retract fact-handle="0:569:760366711:760366711:569:DEFAULT:NON_TRAIT:com.redhat.weightwatcher.Msg"/> 
+
+</batch-execution>
+

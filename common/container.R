@@ -1,5 +1,5 @@
 
-getFitbitObservations <- function( userid, username, obsname, fitbitkey, fitbitsecret, fitbitappname) {
+getFitbitObservations <- function( programid, userid, username, obsname, fitbitkey, fitbitsecret, fitbitappname) {
 
   token_url <- "https://api.fitbit.com/oauth/request_token"
   access_url <- "https://api.fitbit.com/oauth/access_token"
@@ -43,17 +43,17 @@ getFitbitObservations <- function( userid, username, obsname, fitbitkey, fitbits
 
   if (obsname == "weight") {
     for (i in 1:length(content(obsJSON)$`weight`)) {
-      row <- c( userid, obsname, paste(content(obsJSON)$`weight`[i][[1]][['date']], " 07:15:00", sep=""), content(obsJSON)$`weight`[i][[1]][['weight']] )
+      row <- c( programid, userid, obsname, paste(content(obsJSON)$`weight`[i][[1]][['date']], " 07:15:00", sep=""), content(obsJSON)$`weight`[i][[1]][['weight']] )
       obsDF <- rbind(obsDF, c(row))
     }
   } else if (obsname == "activity") {
     for (i in 1:length(content(obsJSON)$`activities-steps`)) {
-      row <- c( userid, obsname, paste(content(obsJSON)$`activities-steps`[i][[1]][['dateTime']], " 07:15:00", sep=""), content(obsJSON)$`activities-steps`[i][[1]][['value']] )
+      row <- c( programid, userid, obsname, paste(content(obsJSON)$`activities-steps`[i][[1]][['dateTime']], " 07:15:00", sep=""), content(obsJSON)$`activities-steps`[i][[1]][['value']] )
       obsDF <- rbind(obsDF, c(row))
     }
   }
   
-  colnames(obsDF) = c("userid", "obsname", "obsdate", "obsvalue")
+  colnames(obsDF) = c("programid", "userid", "obsname", "obsdate", "obsvalue")
   return(obsDF)
 }
 
@@ -106,7 +106,87 @@ postNudgeRequest <- function( url, request ) {
   return(list)
 }
 
-getNudgeRequest <- function( list, query ) {
+deleteAllFacts <- function ( ) {
+   
+   retractbody <- c()
+
+   query <- paste("getFact", sep="")
+   request <- buildQueryRequest( query=query, params="" )
+   list <- postNudgeRequest( containerurl, request )
+
+   facthandles <- getFacthandles(list)
+   if (length(facthandles) > 0) {
+      for (facthandle in facthandles) {
+         retractline <- paste(' <retract fact-handle="', facthandle, '"/> ', sep='')
+         retractbody <- paste(retractbody, retractline, sep='\n')
+      }
+   }
+
+   if (length(retractbody) > 0) {
+      request <- buildRetractRequest( retractbody )
+      postNudgeRequest( containerurl, request )
+   }
+}
+
+deleteAllByUserid <- function ( userid ) {
+
+  factnames <- c("UserFact", "Participant", "GoalScore", "GAS", "Goal", "OptInOut", "Observation", "Msg" )
+
+  retractbody <- c()
+  for (factname in factnames) {
+   
+    query <- paste("get", factname, "ByUserid", sep="")
+    request <- buildQueryRequest( query=query, params=paste('<int>', userid, '</int>', sep='') )
+    list <- postNudgeRequest( containerurl, request )
+
+    facthandles <- getFacthandles(list)
+    if (length(facthandles) > 0) {
+      for (facthandle in facthandles) {
+        retractline <- paste(' <retract fact-handle="', facthandle, '"/> ', sep='')
+        retractbody <- paste(retractbody, retractline, sep='\n')
+      }
+    }
+   }
+
+   if (length(retractbody) > 0) {
+     request <- buildRetractRequest( retractbody )
+     postNudgeRequest( containerurl, request )
+   }
+}
+
+getFacthandles <- function( list ) {
+   facthandles = c()
+   nrows <- length(list$result)
+
+   if ( nrows < 2 ) { return (facthandles) }
+   if ( ! "fact-handle" %in% names(list$result[[2]])) { return (facthandles) }
+      
+   for ( i in 2:(nrows-2) ) {
+     facthandle <- list$result[[i]]$`fact-handle`
+     facthandles <- c(facthandles, facthandle)
+   }
+   return(facthandles)
+}
+
+buildRetractRequest <- function( retractbody ) {
+   fileName <- paste(templatesdir, '/retract-envelope.xml', sep="");
+   request <- readChar( fileName, file.info(fileName)$size )
+   request <- gsub("$(retractbody)", retractbody, request, fixed=TRUE)
+   write( request, "retract.xml" )
+   return(request)
+}
+
+buildQueryRequest <- function( factbody, query, params ) {
+   fileName <- paste(templatesdir, '/query-envelope.xml', sep="");
+   request <- readChar( fileName, file.info(fileName)$size )
+   request <- gsub("$(query)", query, request, fixed=TRUE)
+   request <- gsub("$(params)", params, request, fixed=TRUE)
+   write( request, "query.xml" )
+   # print(request)
+   return(request)
+}
+
+getNudgeRequest <- function( list ) {
    factDF = c()
    for ( i in 2:(length(list$result)-2) ) {
       factjson <- as.character( list$result[[i]]$com.redhat.weightwatcher.Fact$factjson )
@@ -160,13 +240,21 @@ buildObservationFact <- function( obsDF ) {
    for ( i in 1:nrow(obsDF) ) {
       fact <- readChar( fileName, file.info(fileName)$size )
       factid <- factid+1
-      factjson <- paste('{ "userid" : ', obsDF[i, "userid"], ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsDF[i, "obsname"], '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
+      factjson <- paste('{ "programid" : ', obsDF[i, "programid"], ', "userid" : ', obsDF[i, "userid"], ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsDF[i, "obsname"], '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
       fact <- gsub("$(factid)", factid, fact, fixed=TRUE)
       fact <- gsub("$(factname)", factname, fact, fixed=TRUE)
       fact <- gsub("$(factjson)", factjson, fact, fixed=TRUE)
       factbody <- paste(factbody, fact, sep=" ")
    }
    return(factbody)
+}
+
+buildInsertRequest <- function( factbody ) {
+   fileName <- paste(templatesdir, '/insert-envelope.xml', sep="");
+   request <- readChar( fileName, file.info(fileName)$size )
+   request <- gsub("$(factbody)", factbody, request, fixed=TRUE)
+   write( request, "insert.xml" )
+   return(request)
 }
 
 buildEnvelopeRequest <- function( factbody, query, params ) {
@@ -176,7 +264,7 @@ buildEnvelopeRequest <- function( factbody, query, params ) {
    request <- gsub("$(query)", query, request, fixed=TRUE)
    request <- gsub("$(params)", params, request, fixed=TRUE)
    write( request, "input.xml" )
-   print(request)
+   # print(request)
    return(request)
 }
 
@@ -202,7 +290,7 @@ buildNudgeRequest <- function( userid, username, obsname, obsDF ) {
   for ( i in 1:nrow(obsDF) ) {
     fact <- readChar( fileName, file.info(fileName)$size )
     factid <- factid+1
-    factjson <- paste('{ "userid" : ', obsDF[i, "userid"], ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsDF[i, "obsname"], '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
+    factjson <- paste('{ "programid" : ', obsDF[i, "programid"],' "userid" : ', obsDF[i, "userid"], ', "obsdate" : "', obsDF[i, "obsdate"], ' EST",', ' "obsname" : "', obsDF[i, "obsname"], '", "obsvalue" : ', as.integer(obsDF[i, "obsvalue"]), ' }', sep="")
     fact <- gsub("$(factid)", factid, fact, fixed=TRUE)
     fact <- gsub("$(factname)", factname, fact, fixed=TRUE)
     fact <- gsub("$(factjson)", factjson, fact, fixed=TRUE)
@@ -215,7 +303,7 @@ buildNudgeRequest <- function( userid, username, obsname, obsDF ) {
   request <- gsub("$(factbody)", factbody, envelope, fixed=TRUE)
   write( request, "input.xml" )
   
-  print(request)
+  # print(request)
   return(request)
 
 }

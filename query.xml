@@ -1,0 +1,8 @@
+<batch-execution lookup="watchsession" >
+
+	<query out-identifier="Watch" name="getMsgByUserid">
+	<int>4</int>
+	</query>
+
+</batch-execution>
+
