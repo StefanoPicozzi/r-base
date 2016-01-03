@@ -215,7 +215,7 @@
 	<factid>31</factid>
 	<facttype>1</facttype>
 	<factname>Observation</factname>
-	<factjson>{ "programid" : 1, "userid" : 4, "obsdate" : "2016-01-02 07:15:00 EST", "obsname" : "activity", "obsvalue" : 91 }</factjson>
+	<factjson>{ "programid" : 1, "userid" : 4, "obsdate" : "2016-01-02 07:15:00 EST", "obsname" : "activity", "obsvalue" : 14133 }</factjson>
 	<facttxt>Incoming Observation JSON</facttxt>
 </com.redhat.weightwatcher.Fact>
 

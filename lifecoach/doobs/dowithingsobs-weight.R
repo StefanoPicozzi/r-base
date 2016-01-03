@@ -72,12 +72,12 @@ inputDF <- cbind( username = c(username), weightDF)
 if ( is.null(inputDF) ) { stop("No weight records returned") }
 
 for (i in 1:nrow(inputDF)) { 
-   userobs <- c(programid = programid,
-                userid,
-                obsname = "\"weight\"",
-                obsdate = inputDF[i, "obsdate"],
-                obsvalue = inputDF[i, "obsvalue"],
-                obsdesc = "\"System generated from fitbit.com weight download\""                
+   userobs <- c(programid=as.numeric(programid),
+                userid=as.numeric(userid),
+                obsname="\"weight\"",
+                obsdate=inputDF[i, "obsdate"],
+                obsvalue=inputDF[i, "obsvalue"],
+                obsdesc="\"System generated from fitbit.com weight download\""                
                )
    postUserobs(rooturl, userobs)
 }
@@ -97,12 +97,12 @@ inputDF <- cbind( username = c(username), bmiDF)
 if ( is.null(inputDF) ) { stop("No bmi records returned") }
 
 for (i in 1:nrow(inputDF)) { 
-   userobs <- c(programid = programid,
-                userid,
-                obsname = "\"bmi\"",
-                obsdate = inputDF[i, "obsdate"],
-                obsvalue = inputDF[i, "obsvalue"],
-                obsdesc = "\"System generated from fitbit.com bmi download\""                
+   userobs <- c(programid=as.numeric(programid),
+                userid=as.numeric(userid),
+                obsname="\"bmi\"",
+                obsdate=inputDF[i, "obsdate"],
+                obsvalue=inputDF[i, "obsvalue"],
+                obsdesc="\"System generated from fitbit.com bmi download\""                
                )
    postUserobs(rooturl, userobs)
 }

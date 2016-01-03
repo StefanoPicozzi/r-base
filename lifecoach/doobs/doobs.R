@@ -12,8 +12,6 @@ programusers <- getProgramuser(rooturl, programid)
 for (programuser in programusers) {
 
    userid <<- programuser["userid"]
-
-#   if ( userid != 7 && userid != 58 ) { next }   
    if ( userid != 7 ) { next }
 
    obsname <<- "activity"

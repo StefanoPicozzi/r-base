@@ -65,8 +65,8 @@ if ( ! is.na(fitbitkey) ) {
 
    for (i in 1:nrow(inputDF)) { 
 
-      userobs <- c(programid=programid,
-                userid=userid,
+      userobs <- c(programid=as.numeric(programid),
+                userid=as.numeric(userid),
                 obsname="\"activity\"",
                 obsdate=paste("\"", inputDF[i, "obsdate"], "\"", sep=""),
                 obsvalue=inputDF[i, "obsvalue"],
